@@ -36,12 +36,16 @@ public class User {
 
     // vote
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "candidate")
-    private User candidate;
+    @JoinColumn(name = "part_leader")
+    private User partLeader;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vote_team")
     private Team voteTeam;
+
+    public void updatePartLeader(User partLeader) {
+        this.partLeader = partLeader;
+    }
 
     @Builder
     public User(String name, String loginId, String password, String email, Role role, Part part, Team team) {

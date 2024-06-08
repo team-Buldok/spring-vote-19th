@@ -10,10 +10,12 @@ import static org.springframework.http.HttpStatus.*;
 @Getter
 public enum ErrorCode {
 
-    DATA_ALREADY_EXISTED(CONFLICT, "same email already exists"),
-    EMAIL_ALREADY_EXISTED(CONFLICT, ""),
+    DATA_ALREADY_EXISTED(CONFLICT, ""),
+    EMAIL_ALREADY_EXISTED(CONFLICT, "same email already exists"),
     NO_DATA_EXISTED(NOT_FOUND, ""),
     NOT_NULL(NO_CONTENT, ""),
+    VOTE_TO_ANOTHER_PART(CONFLICT, "vote for another part"),
+    ALREADY_VOTED(CONFLICT, "already voted"),
 
     ID_DUPLICATED(CONFLICT, "id already exists"),
     INVALID_PASSWORD(UNAUTHORIZED, ""),
