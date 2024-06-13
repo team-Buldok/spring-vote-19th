@@ -47,3 +47,7 @@ secrets.yml
 *.jpeg
 *.txt
 env
+.gradle/8.7/executionHistory/executionHistory.lock
+.gradle/8.7/fileHashes/fileHashes.bin
+.gradle/8.7/fileHashes/fileHashes.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
