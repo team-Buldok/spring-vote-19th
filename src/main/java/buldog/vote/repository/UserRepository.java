@@ -19,6 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRoleAndPart(Role role, Part part);
     Optional<User> findByIdAndRole(Long id, Role role);
 
-    int countByCandidate(User candidate);
+    int countByPartLeader(User partLeader);
     int countByVoteTeam(Team voteTeam);
 }

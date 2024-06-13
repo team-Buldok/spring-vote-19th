@@ -5,6 +5,7 @@ import buldog.vote.domain.Team;
 import buldog.vote.domain.User;
 import buldog.vote.dto.JoinUserRequest;
 import buldog.vote.dto.ReadLeaderResponse;
+import buldog.vote.dto.ReadUserResponse;
 import buldog.vote.dto.ReadUserInfoResponse;
 import buldog.vote.exception.AppException;
 import buldog.vote.exception.ErrorCode;
@@ -15,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,10 +65,10 @@ public class UserService {
      *
      * @return 파트장의 이름, 파트
      */
-    public List<ReadLeaderResponse> getLeaders() {
-        List<ReadLeaderResponse> leaders = new ArrayList<>();
+    public List<ReadUserResponse> getAllLeaders() {
+        List<ReadUserResponse> leaders = new ArrayList<>();
         userRepository.findByRole(Role.LEADER)
-                .forEach(leader -> leaders.add(ReadLeaderResponse.from(leader)));
+                .forEach(leader -> leaders.add(ReadUserResponse.from(leader)));
 
         return leaders;
     }
@@ -77,16 +77,32 @@ public class UserService {
      * voter가 속한 파트의 파트장들을 반환
      *
      * @param voterId
-     * @return 파트장의 이름, 파트
+     * @return 파트장의 이름, 파트, 득표수를 득표수에 대해 내림차순으로 반환
      */
     public List<ReadLeaderResponse> getPartLeaders(Long voterId) {
-        List<ReadLeaderResponse> leaders = new ArrayList<>();
-
         User voter = userRepository.findById(voterId)
                 .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
 
-        userRepository.findByRoleAndPart(Role.LEADER, voter.getPart())
-                .forEach(leader -> leaders.add(ReadLeaderResponse.from(leader)));
+        List<User> partLeaders = userRepository.findByRoleAndPart(Role.LEADER, voter.getPart());
+
+        Map<Long, Integer> votes = new HashMap<>(); // (pk, voteCount)
+        for (User partLeader : partLeaders) {
+            int voteCount = userRepository.countByPartLeader(partLeader);
+            votes.put(partLeader.getId(), voteCount);
+        }
+
+        // 파트장 투표 내림차순 정렬
+        List<Long> idSet = new ArrayList<>(votes.keySet());
+        idSet.sort((o1, o2) -> votes.get(o2).compareTo(votes.get(o1)));
+
+        List<ReadLeaderResponse> leaders = new ArrayList<>();
+        for (Long id : idSet) {
+            User partLeader = userRepository.findById(id)
+                    .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
+
+            leaders.add(ReadLeaderResponse.from(partLeader, votes.get(id)));
+        }
+
 
         return leaders;
     }
