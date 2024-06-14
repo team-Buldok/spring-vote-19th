@@ -2,26 +2,23 @@ package buldog.vote.dto;
 
 import buldog.vote.domain.Part;
 import buldog.vote.domain.User;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Getter
-@Setter
 @NoArgsConstructor
-public class ReadUserResponse {
-    @Column(nullable = false)
+public class ReadLeaderVoteResultResponse {
     private String name;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private Part part;
+    private int voteCount;
 
-    public static ReadUserResponse from(User user) {
-        ReadUserResponse response = new ReadUserResponse();
+    public static ReadLeaderVoteResultResponse of(User user, int voteCount) {
+        ReadLeaderVoteResultResponse response = new ReadLeaderVoteResultResponse();
         response.name = user.getName();
         response.part = user.getPart();
+        response.voteCount = voteCount;
 
         return response;
     }

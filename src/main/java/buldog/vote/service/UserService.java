@@ -1,11 +1,12 @@
 package buldog.vote.service;
 
+import buldog.vote.domain.Part;
 import buldog.vote.domain.Role;
 import buldog.vote.domain.Team;
 import buldog.vote.domain.User;
 import buldog.vote.dto.JoinUserRequest;
+import buldog.vote.dto.ReadLeaderVoteResultResponse;
 import buldog.vote.dto.ReadLeaderResponse;
-import buldog.vote.dto.ReadUserResponse;
 import buldog.vote.dto.ReadUserInfoResponse;
 import buldog.vote.exception.AppException;
 import buldog.vote.exception.ErrorCode;
@@ -13,6 +14,7 @@ import buldog.vote.repository.TeamRepository;
 import buldog.vote.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +28,27 @@ public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
 
+    /**
+     * PK로 유저 정보 조회
+     *
+     * @param userId
+     * @return
+     */
     public ReadUserInfoResponse getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
+
+        return ReadUserInfoResponse.from(user);
+    }
+
+    /**
+     * 이메일로 유저 정보 조회
+     *
+     * @param email
+     * @return
+     */
+    public ReadUserInfoResponse getUserInfo(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
 
         return ReadUserInfoResponse.from(user);
@@ -61,29 +82,25 @@ public class UserService {
     }
 
     /**
-     * 부서 상관없이 모든 파트장을 반환
+     * 프론트 파트장 후보를 반환
      *
      * @return 파트장의 이름, 파트
      */
-    public List<ReadUserResponse> getAllLeaders() {
-        List<ReadUserResponse> leaders = new ArrayList<>();
-        userRepository.findByRole(Role.LEADER)
-                .forEach(leader -> leaders.add(ReadUserResponse.from(leader)));
+    public List<ReadLeaderResponse> getPartLeaders(Part part) {
+        List<ReadLeaderResponse> leaders = new ArrayList<>();
+        userRepository.findByRoleAndPart(Role.LEADER, part)
+                .forEach(leader -> leaders.add(ReadLeaderResponse.from(leader)));
 
         return leaders;
     }
 
     /**
-     * voter가 속한 파트의 파트장들을 반환
+     * 파트장 투표 결과 반환
      *
-     * @param voterId
      * @return 파트장의 이름, 파트, 득표수를 득표수에 대해 내림차순으로 반환
      */
-    public List<ReadLeaderResponse> getPartLeaders(Long voterId) {
-        User voter = userRepository.findById(voterId)
-                .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
-
-        List<User> partLeaders = userRepository.findByRoleAndPart(Role.LEADER, voter.getPart());
+    public List<ReadLeaderVoteResultResponse> getLeadersVoteResult(Part part) {
+        List<User> partLeaders = userRepository.findByRoleAndPart(Role.LEADER, part);
 
         Map<Long, Integer> votes = new HashMap<>(); // (pk, voteCount)
         for (User partLeader : partLeaders) {
@@ -95,12 +112,12 @@ public class UserService {
         List<Long> idSet = new ArrayList<>(votes.keySet());
         idSet.sort((o1, o2) -> votes.get(o2).compareTo(votes.get(o1)));
 
-        List<ReadLeaderResponse> leaders = new ArrayList<>();
+        List<ReadLeaderVoteResultResponse> leaders = new ArrayList<>();
         for (Long id : idSet) {
             User partLeader = userRepository.findById(id)
                     .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
 
-            leaders.add(ReadLeaderResponse.from(partLeader, votes.get(id)));
+            leaders.add(ReadLeaderVoteResultResponse.of(partLeader, votes.get(id)));
         }
 
 
@@ -133,4 +150,6 @@ public class UserService {
 
         voter.updatePartLeader(partLeader);
     }
+
+
 }
