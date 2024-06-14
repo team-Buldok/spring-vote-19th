@@ -47,6 +47,10 @@ public class User {
         this.partLeader = partLeader;
     }
 
+    public void updateVoteTeam(Team voteTeam) {
+        this.voteTeam = voteTeam;
+    }
+
     @Builder
     public User(String name, String loginId, String password, String email, Role role, Part part, Team team) {
         this.name = name;
