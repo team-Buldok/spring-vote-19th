@@ -16,6 +16,7 @@ public enum ErrorCode {
     NOT_NULL(NO_CONTENT, ""),
     VOTE_TO_ANOTHER_PART(CONFLICT, "vote for another part"),
     ALREADY_VOTED(CONFLICT, "already voted"),
+    VOTE_FOR_YOUR_TEAM(CONFLICT,"could't vote for your team"),
 
     ID_DUPLICATED(CONFLICT, "id already exists"),
     INVALID_PASSWORD(UNAUTHORIZED, ""),
