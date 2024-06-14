@@ -78,4 +78,4 @@ jobs:
             echo "${{ secrets.DEV_ENV }}" | sudo tee .env > /dev/null
             sudo docker-compose -f $COMPOSE down --rmi all
             sudo docker pull $NAME/$APP
-            sudo docker-compose -f $COMPOSE up -d
+            sudo docker-compose -f $COMPOSE --env-file ./.env up -d
