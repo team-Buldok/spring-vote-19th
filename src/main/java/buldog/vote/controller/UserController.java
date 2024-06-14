@@ -130,6 +130,6 @@ public class UserController {
     public ResponseEntity<BaseResponse> voteTeam(@PathVariable("voter_id") Long voterId, @PathVariable(value = "team_id") Long teamId) {
         teamService.voteToTeam(voterId, teamId);
 
-        return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "데모데이 팀 투표 결과 조회", null));
+        return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "데모데이 팀 투표", null));
     }
 }
