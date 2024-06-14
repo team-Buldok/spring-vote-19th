@@ -47,3 +47,4 @@ secrets.yml
 *.jpeg
 *.txt
 
+/.gradle
