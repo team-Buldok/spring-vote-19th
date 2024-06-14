@@ -22,7 +22,7 @@ public class TeamController {
     /**
      * 모든 데모데이 팀 보기
      *
-     * @return 팀의 이름, 소개글
+     * @return 팀의 이름, 소개글 k
      */
     @GetMapping("/teams")
     public ResponseEntity<BaseResponse<List<ReadTeamResponse>>> readAllTeams() {
