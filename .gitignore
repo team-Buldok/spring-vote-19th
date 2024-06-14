@@ -1,5 +1,4 @@
 *#
-!gradle/wrapper/gradle-wrapper.jar
 *.iml
 *.ipr
 *.iws
@@ -13,6 +12,7 @@
 .classpath
 .factorypath
 .gradle
+!gradle/wrapper/gradle-wrapper.jar
 .metadata
 .project
 .recommenders
