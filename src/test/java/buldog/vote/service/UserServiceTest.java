@@ -5,12 +5,15 @@ import buldog.vote.domain.Role;
 import buldog.vote.domain.Team;
 import buldog.vote.domain.User;
 import buldog.vote.dto.JoinUserRequest;
+import buldog.vote.dto.ReadLeaderVoteResultResponse;
 import buldog.vote.dto.ReadLeaderResponse;
-import buldog.vote.dto.ReadUserResponse;
+import buldog.vote.exception.AppException;
 import buldog.vote.repository.TeamRepository;
 import buldog.vote.repository.UserRepository;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,18 +56,52 @@ class UserServiceTest {
     }
 
     @Test
-    void getAllLeaders(){
-        List<ReadUserResponse> allLeaders = userService.getAllLeaders();
-        Assertions.assertEquals(allLeaders.size(), 3);
+    @DisplayName(value = "front-end 리더 조회")
+    void getFrontLeaders() {
+        List<ReadLeaderResponse> allLeaders = userService.getPartLeaders(Part.FRONT);
+        Assertions.assertEquals(allLeaders.size(), 1);
     }
+
     @Test
+    @DisplayName(value = "back-end 리더 조회")
+    void getBackLeaders() {
+        List<ReadLeaderResponse> allLeaders = userService.getPartLeaders(Part.BACK);
+        Assertions.assertEquals(allLeaders.size(), 2);
+    }
+
+    @Test
+    @DisplayName(value = "투표수 내림차순으로 백엔드 파트장 조회")
     void getPartLeaders() {
-        List<ReadLeaderResponse> partLeaders = userService.getPartLeaders(userId);
-        for (ReadLeaderResponse partLeader : partLeaders) {
+        List<ReadLeaderVoteResultResponse> partLeaders = userService.getLeadersVoteResult(Part.BACK);
+        for (ReadLeaderVoteResultResponse partLeader : partLeaders) {
             System.out.println("partLeader = " + partLeader);
         }
 
         Assertions.assertEquals(partLeaders.size(), 2);
         Assertions.assertEquals(partLeaders.getFirst().getName(), "leader2");
+    }
+
+    @Test
+    @DisplayName(value = "중복 아이디로 가입시도")
+    void joinWithDuplicatedLoginId() {
+        JoinUserRequest joinUserRequest = new JoinUserRequest("user2", "user1id", "pass", "user2@naver.com", "buldog", Role.GENERAL, Part.FRONT);
+        AppException appException = Assert.assertThrows(AppException.class, () -> userService.join(joinUserRequest));
+        Assert.assertEquals(appException.getMessage(), "id already exists");
+    }
+
+    @Test
+    @DisplayName(value = "중복 이메일로 가입시도")
+    void joinWithDuplicatedEmail() {
+        JoinUserRequest joinUserRequest = new JoinUserRequest("user2", "user2id", "pass", "user1@naver.com", "buldog", Role.GENERAL, Part.FRONT);
+        AppException appException = Assert.assertThrows(AppException.class, () -> userService.join(joinUserRequest));
+        Assert.assertEquals(appException.getMessage(), "same email already exists");
+    }
+
+    @Test
+    @DisplayName(value = "중복 투표 시도")
+    void voteToWrongPart() {
+        User leader2 = userRepository.findByName("leader2").get();
+        AppException appException = Assert.assertThrows(AppException.class, () -> userService.voteToPartLeader(userId, leader2.getId()));
+        Assert.assertEquals(appException.getMessage(), "already voted");
     }
 }
