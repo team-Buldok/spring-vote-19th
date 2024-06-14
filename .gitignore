@@ -39,6 +39,10 @@ target
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+.env*
+
+
+
 
 .idea
 .mysql
