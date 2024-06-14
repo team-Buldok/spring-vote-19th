@@ -23,4 +23,4 @@ logging:
 
 jwt:
   token:
-    secret: ${JWT_TOKEN_SECRET}  
+    secret: ${JWT_TOKEN_SECRET}
