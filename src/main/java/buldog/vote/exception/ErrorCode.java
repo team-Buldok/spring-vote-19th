@@ -28,7 +28,14 @@ public enum ErrorCode {
     INVALID_URI_ACCESS(NOT_FOUND, ""),
     NOT_INCLUDED_USER_ACCESS(CONFLICT, ""),
     REFRESH_NOT_EXIST(BAD_REQUEST, ""),
-    TOKEN_EXPIRED(BAD_REQUEST, "");
+    TOKEN_EXPIRED(BAD_REQUEST, ""),
+
+
+    //로그인 관련
+    ID_NOT_MATCH(BAD_REQUEST,"login id not match"),
+    PASSWORD_NOT_MATCH(BAD_REQUEST,"password not match"),
+    REFRESH_TOKEN_NOT_MATCH(BAD_REQUEST,"refresh token not match"),
+    ACCESS_TOKEN_NOT_MATCH(BAD_REQUEST,"access token not match");
 
 
     private final HttpStatus httpStatus;

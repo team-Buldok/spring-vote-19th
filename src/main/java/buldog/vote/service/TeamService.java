@@ -75,10 +75,8 @@ public class TeamService {
      * @param teamId
      */
     @Transactional
-    public void voteToTeam(Long voterId, Long teamId) {
-        User voter = userRepository.findById(voterId)
-                .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exists"));
-
+    public void voteToTeam(String username, Long teamId) {
+        User voter = findByUsername(username);
         Team voteTeam = teamRepository.findById(teamId)
                 .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "Team does not exists"));
 
@@ -93,5 +91,10 @@ public class TeamService {
         }
 
         voter.updateVoteTeam(voteTeam);
+    }
+
+    private User findByUsername(String username){
+        return userRepository.findByUsername(username)
+                .orElseThrow(()->new AppException(ErrorCode.NO_DATA_EXISTED,"User does not exists"));
     }
 }

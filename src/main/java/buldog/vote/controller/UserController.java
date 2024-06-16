@@ -1,5 +1,6 @@
 package buldog.vote.controller;
 
+import buldog.vote.common.interfaces.CurrentMemberLoginId;
 import buldog.vote.domain.Part;
 import buldog.vote.domain.User;
 import buldog.vote.dto.*;
@@ -128,13 +129,13 @@ public class UserController {
 
     /**
      * 데모데이 팀에 투표하기
-     * @param voterId
+     * @param username
      * @param teamId
      * @return
      */
-    @PostMapping("/users/{voter_id}/votes/teams/{team_id}")
-    public ResponseEntity<BaseResponse> voteTeam(@PathVariable("voter_id") Long voterId, @PathVariable(value = "team_id") Long teamId) {
-        teamService.voteToTeam(voterId, teamId);
+    @PostMapping("/users/votes/teams/{team_id}")
+    public ResponseEntity<BaseResponse> voteTeam(@CurrentMemberLoginId String username, @PathVariable(value = "team_id") Long teamId) {
+        teamService.voteToTeam(username,teamId);
 
         return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "데모데이 팀 투표", null));
     }
