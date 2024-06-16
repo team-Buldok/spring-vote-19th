@@ -28,7 +28,6 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
-    private final BCryptPasswordEncoder encoder;
 
     /**
      * PK로 유저 정보 조회
@@ -75,7 +74,7 @@ public class UserService {
 
         User user = User.builder()
                 .name(request.getName())
-                .username(request.getUsername()).password(encoder.encode(request.getPassword())).email(request.getEmail())
+                .username(request.getUsername()).password(request.getPassword()).email(request.getEmail())
                 .part(request.getPart()).role(request.getRole()).team(team).build();
 
         userRepository.save(user);
