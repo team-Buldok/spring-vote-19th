@@ -5,16 +5,22 @@ import buldog.vote.domain.User;
 import buldog.vote.dto.*;
 import buldog.vote.service.TeamService;
 import buldog.vote.service.UserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class UserController {
     private final UserService userService;
     private final TeamService teamService;
@@ -26,7 +32,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/join")
-    public ResponseEntity<BaseResponse<String>> join(@RequestBody JoinUserRequest request) {
+    public ResponseEntity<BaseResponse<String>> join(@RequestBody @Valid JoinUserRequest request) {
         User user = userService.join(request);
 
         return ResponseEntity.ok(new BaseResponse(HttpStatus.OK, "회원 가입 성공", user.getEmail()));
@@ -52,7 +58,7 @@ public class UserController {
      * @return pk, 이름, 아이디, 이메일
      */
     @GetMapping("/users")
-    public ResponseEntity<BaseResponse<ReadUserInfoResponse>> readUser(@RequestParam String email) {
+    public ResponseEntity<BaseResponse<ReadUserInfoResponse>> readUser(@RequestParam @Valid @Pattern(regexp="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])+[.][a-zA-Z]{2,3}$", message="invalid email type") String email) {
         ReadUserInfoResponse userInfo = userService.getUserInfo(email);
 
         return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "유저 정보 조회", userInfo));

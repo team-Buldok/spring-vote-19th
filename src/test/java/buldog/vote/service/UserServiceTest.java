@@ -83,7 +83,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName(value = "중복 아이디로 가입시도")
-    void joinWithDuplicatedLoginId() {
+    void joinWithDuplicatedUsername() {
         JoinUserRequest joinUserRequest = new JoinUserRequest("user2", "user1id", "pass", "user2@naver.com", "buldog", Role.GENERAL, Part.FRONT);
         AppException appException = Assert.assertThrows(AppException.class, () -> userService.join(joinUserRequest));
         Assert.assertEquals(appException.getMessage(), "id already exists");

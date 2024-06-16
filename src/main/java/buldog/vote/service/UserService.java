@@ -15,6 +15,7 @@ import buldog.vote.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
+    private final BCryptPasswordEncoder encoder;
 
     /**
      * PK로 유저 정보 조회
@@ -62,7 +64,7 @@ public class UserService {
      */
     @Transactional
     public User join(JoinUserRequest request) {
-        userRepository.findByLoginId(request.getLoginId()).ifPresent(user -> {
+        userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
             throw new AppException(ErrorCode.ID_DUPLICATED);
         });
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
@@ -73,7 +75,7 @@ public class UserService {
 
         User user = User.builder()
                 .name(request.getName())
-                .loginId(request.getLoginId()).password(request.getPassword()).email(request.getEmail())
+                .username(request.getUsername()).password(encoder.encode(request.getPassword())).email(request.getEmail())
                 .part(request.getPart()).role(request.getRole()).team(team).build();
 
         userRepository.save(user);

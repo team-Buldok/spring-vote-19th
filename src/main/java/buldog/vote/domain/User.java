@@ -16,7 +16,7 @@ public class User {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false, unique = true)
-    private String loginId;
+    private String username;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false, unique = true)
@@ -52,13 +52,19 @@ public class User {
     }
 
     @Builder
-    public User(String name, String loginId, String password, String email, Role role, Part part, Team team) {
+    public User(String name, String username, String password, String email, Role role, Part part, Team team) {
         this.name = name;
-        this.loginId = loginId;
+        this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.part = part;
         this.team = team;
+    }
+
+    public static User createTempUser(String username, String password, String role) {
+        return User.builder()
+                .username(username).password(password).role(Role.valueOf(role))
+                .build();
     }
 }

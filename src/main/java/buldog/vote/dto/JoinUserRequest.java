@@ -2,7 +2,10 @@ package buldog.vote.dto;
 
 import buldog.vote.domain.Part;
 import buldog.vote.domain.Role;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -13,8 +16,8 @@ public class JoinUserRequest {
     @NotBlank(message="name must be entered")
     private String name;
 
-    @NotBlank(message="id must be entered")
-    private String loginId;
+    @NotBlank(message="username must be entered")
+    private String username;
 
     @NotBlank(message="password must be entered")
     private String password;
@@ -26,9 +29,6 @@ public class JoinUserRequest {
     @NotBlank
     private String team;
 
-    @NotBlank
     private Role role;
-
-    @NotBlank
     private Part part;
 }
