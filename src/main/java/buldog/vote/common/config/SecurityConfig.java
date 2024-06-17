@@ -46,12 +46,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((requests) ->
                         requests
-                                .requestMatchers("/users/votes/teams/{team_id}").hasAuthority("임시")
+                                .requestMatchers("/api/v1/auth/login","/api/v1/auth/reissue","/join","/users/leaders/front","/users/leaders/back","teams")
                               //  requestMatchers(HttpMethod.GET,"/post/*").permitAll()
                              //   .requestMatchers("/test/login").hasAuthority(Authority.NORMAL.toString())
                                // .requestMatchers("/api/v1/profiles").hasAuthority(Authority.NORMAL.toString())
                                 // .requestMatchers("/post/*").hasAuthority("GENERAL")
-                                .anyRequest().permitAll())
+                                .permitAll())
 
                 .addFilterBefore(new JwtFilter(tokenProvider,redisTemplate),
                         UsernamePasswordAuthenticationFilter.class);
