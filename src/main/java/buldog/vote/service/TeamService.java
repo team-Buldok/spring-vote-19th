@@ -60,7 +60,7 @@ public class TeamService {
         List<ReadTeamVoteResultResponse> responses = new ArrayList<>();
         for (Long id : idSet) {
             Team team = teamRepository.findById(id)
-                    .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "User does not exist"));
+                    .orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "Team does not exist"));
 
             responses.add(ReadTeamVoteResultResponse.of(team, votes.get(id)));
         }
@@ -71,7 +71,7 @@ public class TeamService {
 
     /**
      * 데모데이 팀 투표
-     * @param voterId
+     * @param username
      * @param teamId
      */
     @Transactional

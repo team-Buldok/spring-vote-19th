@@ -9,17 +9,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ReadUserInfoResponse {
-    private Long userId;
     private String name;
     private String username;
     private String email;
+    private String role;
+    private String part;
+    private String team;
 
     public static ReadUserInfoResponse from(User user) {
         ReadUserInfoResponse response = new ReadUserInfoResponse();
-        response.userId = user.getId();
         response.name = user.getName();
         response.username = user.getUsername();
         response.email = user.getEmail();
+        response.role = user.getRole().toString();
+        response.part = user.getPart().toString();
+        response.team = user.getTeam().getName();
 
         return response;
     }

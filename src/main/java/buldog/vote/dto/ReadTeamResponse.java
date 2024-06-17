@@ -9,11 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ReadTeamResponse {
+    private Long teamId;
     private String name;
     private String introduction;
 
     public static ReadTeamResponse from(final Team team) {
         final ReadTeamResponse response = new ReadTeamResponse();
+        response.teamId = team.getId();
         response.name = team.getName();
         response.introduction = team.getIntroduction();
 

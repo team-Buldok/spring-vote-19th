@@ -68,6 +68,12 @@ public class CustomUserDetails implements UserDetails, CredentialsContainer {
         return this.username;
     }
 
+    /**
+     * 현재 로그인한 유저의 pk 조회용 로직
+     * @return
+     */
+    public Long getId(){return this.user.getId();}
+
     @Override
     public boolean isEnabled() {
         return this.enabled;
