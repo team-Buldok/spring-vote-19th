@@ -61,3 +61,7 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+    enabled = false  // build시 jar가 한개만 생성
+}
