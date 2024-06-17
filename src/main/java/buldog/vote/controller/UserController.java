@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Validated
+@RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
     private final TeamService teamService;

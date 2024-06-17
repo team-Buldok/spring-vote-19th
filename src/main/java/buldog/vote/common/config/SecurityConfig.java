@@ -41,19 +41,21 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling((exception)-> exception.authenticationEntryPoint(authenticationEntryPointHandler))
-                .exceptionHandling((exception)-> exception.accessDeniedHandler(accessDeniedHandler))
+                .exceptionHandling((exception) -> exception.authenticationEntryPoint(authenticationEntryPointHandler))
+                .exceptionHandling((exception) -> exception.accessDeniedHandler(accessDeniedHandler))
 
                 .authorizeHttpRequests((requests) ->
                         requests
-                                .requestMatchers("/api/v1/auth/login","/api/v1/auth/reissue","/join","/users/leaders/front","/users/leaders/back","teams")
-                              //  requestMatchers(HttpMethod.GET,"/post/*").permitAll()
-                             //   .requestMatchers("/test/login").hasAuthority(Authority.NORMAL.toString())
-                               // .requestMatchers("/api/v1/profiles").hasAuthority(Authority.NORMAL.toString())
+                                .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**")
+                                .permitAll()// swagger 경로 접근 허용
+                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/reissue", "/join", "/users/leaders/front", "/users/leaders/back", "teams")
+                                //  requestMatchers(HttpMethod.GET,"/post/*").permitAll()
+                                //   .requestMatchers("/test/login").hasAuthority(Authority.NORMAL.toString())
+                                // .requestMatchers("/api/v1/profiles").hasAuthority(Authority.NORMAL.toString())
                                 // .requestMatchers("/post/*").hasAuthority("GENERAL")
                                 .permitAll())
 
-                .addFilterBefore(new JwtFilter(tokenProvider,redisTemplate),
+                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate),
                         UsernamePasswordAuthenticationFilter.class);
 
 
