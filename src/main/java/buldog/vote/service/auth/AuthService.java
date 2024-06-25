@@ -102,6 +102,7 @@ public class AuthService {
                 .secure(true)//true 시 HTTPS 연결을 통해서만 전달 .
                 .path("/")
                 .maxAge(refreshTokenValidationTime)
+                .sameSite("None")
                 .build();
     }
 
