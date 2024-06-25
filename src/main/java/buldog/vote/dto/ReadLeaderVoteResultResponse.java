@@ -1,6 +1,7 @@
 package buldog.vote.dto;
 
 import buldog.vote.domain.Part;
+import buldog.vote.domain.Team;
 import buldog.vote.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,14 @@ import lombok.ToString;
 public class ReadLeaderVoteResultResponse {
     private String name;
     private Part part;
+    private String team;
     private int voteCount;
 
     public static ReadLeaderVoteResultResponse of(User user, int voteCount) {
         ReadLeaderVoteResultResponse response = new ReadLeaderVoteResultResponse();
         response.name = user.getName();
         response.part = user.getPart();
+        response.team = user.getTeam().getName();
         response.voteCount = voteCount;
 
         return response;
