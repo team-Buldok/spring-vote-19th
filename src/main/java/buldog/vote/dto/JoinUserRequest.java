@@ -29,6 +29,5 @@ public class JoinUserRequest {
     @NotBlank
     private String team;
 
-    private Role role;
     private Part part;
 }
