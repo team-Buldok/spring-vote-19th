@@ -28,6 +28,8 @@ public class AuthController {
     private final AuthService authService;
     private static final String accessTokenHeader = "Authorization";
 
+    private static final String refreshTokenHeader = "refreshToken";
+
 
     @PostMapping("/login")
     @Operation(summary = "ID, Password 기반 로그인",description = "ID 와 password 를 기반으로 로그인을 합니다.")
@@ -41,7 +43,7 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(accessTokenHeader,tokenResponseWithUserIdDto.getAccessToken())
-                .header(HttpHeaders.SET_COOKIE, tokenResponseWithUserIdDto.getResponseCookie().toString())
+                .header(refreshTokenHeader,tokenResponseWithUserIdDto.getRefreshToken())
                 .build();
     }
 
@@ -73,7 +75,7 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header(accessTokenHeader,tokenReIssueResponseDto.getAccessToken())
-                .header(HttpHeaders.SET_COOKIE,tokenReIssueResponseDto.getResponseCookie().toString())
+                .header(refreshTokenHeader,tokenReIssueResponseDto.getRefreshToken())
                 .build();
 
     }

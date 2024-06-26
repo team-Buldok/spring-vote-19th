@@ -53,7 +53,8 @@ public class SecurityConfig {
                                 //   .requestMatchers("/test/login").hasAuthority(Authority.NORMAL.toString())
                                 // .requestMatchers("/api/v1/profiles").hasAuthority(Authority.NORMAL.toString())
                                 // .requestMatchers("/post/*").hasAuthority("GENERAL")
-                                .permitAll())
+                                .permitAll()
+                                .anyRequest().authenticated())
 
                 .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate),
                         UsernamePasswordAuthenticationFilter.class);

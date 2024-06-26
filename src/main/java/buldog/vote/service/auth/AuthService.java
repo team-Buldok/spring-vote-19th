@@ -54,8 +54,7 @@ public class AuthService {
         saveLoginProcessAtRedis(authentication.getName(),tokenDto);
 
         return new TokenResponseWithUserIdDto(tokenDto.getType(),tokenDto.getAccessToken(),
-                makeResponseCookie(tokenDto.getRefreshToken(),tokenDto.getRefreshTokenValidationTime()),
-                tokenDto.getAccessTokenValidationTime(),findUser.getUsername());
+                tokenDto.getRefreshToken(),tokenDto.getAccessTokenValidationTime(),findUser.getUsername());
 
     }
 
@@ -73,7 +72,7 @@ public class AuthService {
         saveLoginProcessAtRedis(authentication.getName(),tokenDto);
 
         return new TokenReIssueResponseDto(tokenDto.getType(),tokenDto.getAccessToken(),
-                makeResponseCookie(tokenDto.getRefreshToken(),tokenDto.getRefreshTokenValidationTime()),tokenDto.getAccessTokenValidationTime());
+                tokenDto.getRefreshToken(),tokenDto.getAccessTokenValidationTime());
     }
 
     @Transactional
@@ -98,10 +97,11 @@ public class AuthService {
 
     private ResponseCookie makeResponseCookie(String refreshToken,Long refreshTokenValidationTime){
         return  ResponseCookie.from("refreshToken",refreshToken)
-                .httpOnly(true)//   true 시 자바스크립트에서 쿠키 접근 불가 따라서 XSS 공격 방지
+                .httpOnly(false)//   true 시 자바스크립트에서 쿠키 접근 불가 따라서 XSS 공격 방지
                 .secure(true)//true 시 HTTPS 연결을 통해서만 전달 .
                 .path("/")
                 .maxAge(refreshTokenValidationTime)
+                .sameSite("None")
                 .build();
     }
 

@@ -8,14 +8,14 @@ import org.springframework.http.ResponseCookie;
 public class TokenReIssueResponseDto {
     private String grantType;
     private String accessToken;
-    private ResponseCookie responseCookie;
+    private String refreshToken;
     private Long accessTokenExpirationTime;
 
     @Builder
-    public TokenReIssueResponseDto(String grantType,String accessToken,ResponseCookie responseCookie, Long accessTokenExpirationTime){
+    public TokenReIssueResponseDto(String grantType,String accessToken,String refreshToken, Long accessTokenExpirationTime){
         this.grantType = grantType;
         this.accessToken = accessToken;
-        this.responseCookie = responseCookie;
+        this.refreshToken = refreshToken;
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
 }
