@@ -153,5 +153,15 @@ public class UserService {
         voter.updatePartLeader(partLeader);
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
+
+    @Transactional
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
+
 
 }

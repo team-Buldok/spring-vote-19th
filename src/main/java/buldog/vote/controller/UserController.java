@@ -125,4 +125,18 @@ public class UserController {
 
         return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "데모데이 팀 투표", null));
     }
+
+    @Operation(summary = "유저 제거",description = "유저를 제거합니다(임시로 만든 기능, 추후 삭제 필수)")
+    @DeleteMapping("/users/{delete_user_id}")
+    public ResponseEntity<BaseResponse> deleteUser(@PathVariable(value = "delete_user_id") Long deleteUserId) {
+        userService.deleteUser(deleteUserId);
+        return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "유저 제거", null));
+    }
+
+    @Operation(summary = "유저 전체 제거",description = "유저를 전부 제거합니다(임시로 만든 기능, 추후 삭제 필수)")
+    @DeleteMapping("/users/{delete_user_id}/all")
+    public ResponseEntity<BaseResponse> deleteAllUser() {
+        userService.deleteAllUsers();
+        return ResponseEntity.ok(new BaseResponse<>(HttpStatus.OK, "유저 제거", null));
+    }
 }
