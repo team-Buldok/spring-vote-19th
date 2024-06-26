@@ -30,7 +30,7 @@ public class UserController {
     private final UserService userService;
     private final TeamService teamService;
 
-    @Operation(summary = "회원 가입",description = "이름, 아이디, 비밀번호, 이메일, 팀, 역할(LEADER, GENERAL), 파트(FRONT, BACK)의 정보로 회원가입을 진행합니다")
+    @Operation(summary = "회원 가입",description = "이름, 아이디, 비밀번호, 이메일, 팀, 파트(FRONT, BACK)의 정보로 회원가입을 진행합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",description = "회원가입 성공"),
             @ApiResponse(responseCode = "404",description = "가입하려는 팀이 존재하지 않을 때"),
@@ -42,6 +42,20 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new BaseResponse(HttpStatus.CREATED, "회원 가입 성공", user.getEmail()));
+    }
+
+    @Operation(summary = "파트장 등록",description = "이름, 팀, 파트(FRONT, BACK)의 정보로 회원가입을 진행합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",description = "회원가입 성공"),
+            @ApiResponse(responseCode = "404",description = "가입하려는 팀이 존재하지 않을 때"),
+            @ApiResponse(responseCode = "409",description = "아이디나 이메일 중복 시")
+    })
+    @PostMapping("/join/leader")
+    public ResponseEntity<BaseResponse<String>> joinLeader(@RequestBody @Valid JoinLeaderRequest request) {
+        User user = userService.joinLeader(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new BaseResponse(HttpStatus.CREATED, "파트장 등록 성공", user.getEmail()));
     }
 
     @Operation(summary = "유저 정보 조회",description = "현재 로그인한 유저의 정보를 조회합니다")

@@ -4,10 +4,7 @@ import buldog.vote.domain.Part;
 import buldog.vote.domain.Role;
 import buldog.vote.domain.Team;
 import buldog.vote.domain.User;
-import buldog.vote.dto.JoinUserRequest;
-import buldog.vote.dto.ReadLeaderVoteResultResponse;
-import buldog.vote.dto.ReadLeaderResponse;
-import buldog.vote.dto.ReadUserInfoResponse;
+import buldog.vote.dto.*;
 import buldog.vote.exception.AppException;
 import buldog.vote.exception.ErrorCode;
 import buldog.vote.repository.TeamRepository;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +74,37 @@ public class UserService {
         User user = User.builder()
                 .name(request.getName())
                 .username(request.getUsername()).password(passwordEncoder.encode(request.getPassword())).email(request.getEmail())
-                .part(request.getPart()).role(request.getRole()).team(team).build();
+                .part(request.getPart()).role(Role.GENERAL).team(team).build();
+
+        userRepository.save(user);
+
+        return user;
+    }
+
+    /**
+     * 파트장 등록
+     *
+     * @param request
+     * @return 유저 엔티티
+     */
+    @Transactional
+    public User joinLeader(JoinLeaderRequest request) {
+        userRepository.findLeaderByTeamAndName(request.getTeam(), request.getName()).ifPresent(e->{
+            throw new AppException(ErrorCode.DATA_ALREADY_EXISTED,"leader already exists");
+        });
+        Team team = teamRepository.findByName(request.getTeam()).orElseThrow(() -> new AppException(ErrorCode.NO_DATA_EXISTED, "Team does not exists"));
+
+        String randomString1 = ((Integer) ThreadLocalRandom.current().nextInt()).toString();
+        String randomString2 = ((Integer) ThreadLocalRandom.current().nextInt()).toString();
+
+        String randUserName = passwordEncoder.encode(randomString1);
+        String randPassword = passwordEncoder.encode(randomString2);
+        String randEmail = randUserName + "@vote.com";
+
+        User user = User.builder()
+                .name(request.getName())
+                .username(randUserName).password(passwordEncoder.encode(randPassword)).email(randEmail)
+                .part(request.getPart()).role(Role.LEADER).team(team).build();
 
         userRepository.save(user);
 

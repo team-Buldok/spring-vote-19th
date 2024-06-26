@@ -48,7 +48,7 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**")
                                 .permitAll()// swagger 경로 접근 허용
-                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/reissue", "/api/v1/join", "/api/v1/users/leaders/front", "/api/v1/users/leaders/back", "/api/v1/teams")
+                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/reissue", "/api/v1/join/**", "/api/v1/users/leaders/front", "/api/v1/users/leaders/back", "/api/v1/teams")
                                 //  requestMatchers(HttpMethod.GET,"/post/*").permitAll()
                                 //   .requestMatchers("/test/login").hasAuthority(Authority.NORMAL.toString())
                                 // .requestMatchers("/api/v1/profiles").hasAuthority(Authority.NORMAL.toString())
